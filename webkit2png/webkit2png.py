@@ -123,16 +123,16 @@ class WebkitRenderer(QObject):
 
 ## @brief The CookieJar class inherits QNetworkCookieJar to make a couple of functions public.
 class CookieJar(QNetworkCookieJar):
-	def __init__(self, cookies, qtUrl, parent=None):
-		QNetworkCookieJar.__init__(self, parent)
-		for cookie in cookies:
-			QNetworkCookieJar.setCookiesFromUrl(self, QNetworkCookie.parseCookies(QByteArray(cookie)), qtUrl)
+    def __init__(self, cookies, qtUrl, parent=None):
+        QNetworkCookieJar.__init__(self, parent)
+        for cookie in cookies:
+            QNetworkCookieJar.setCookiesFromUrl(self, QNetworkCookie.parseCookies(QByteArray(cookie)), qtUrl)
 
-	def allCookies(self):
-		return QNetworkCookieJar.allCookies(self)
-	
-	def setAllCookies(self, cookieList):
-		QNetworkCookieJar.setAllCookies(self, cookieList)
+    def allCookies(self):
+        return QNetworkCookieJar.allCookies(self)
+    
+    def setAllCookies(self, cookieList):
+        QNetworkCookieJar.setAllCookies(self, cookieList)
 
 class _WebkitRendererHelper(QObject):
     """
@@ -150,14 +150,14 @@ class _WebkitRendererHelper(QObject):
         QObject.__init__(self)
 
         # Copy properties from parent
-        for key,value in parent.__dict__.items():
+        for key,value in list(parent.__dict__.items()):
             setattr(self,key,value)
 
         # Determine Proxy settings
         proxy = QNetworkProxy(QNetworkProxy.NoProxy)
         if 'http_proxy' in os.environ:
             proxy_url = QUrl(os.environ['http_proxy'])
-            if unicode(proxy_url.scheme()).startswith('http'):
+            if str(proxy_url.scheme()).startswith('http'):
                 protocol = QNetworkProxy.HttpProxy
             else:
                 protocol = QNetworkProxy.Socks5Proxy
@@ -181,7 +181,7 @@ class _WebkitRendererHelper(QObject):
         self._window.setCentralWidget(self._view)
 
         # Import QWebSettings
-        for key, value in self.qWebSettings.iteritems():
+        for key, value in self.qWebSettings.items():
             self._page.settings().setAttribute(key, value)
 
         # Connect required event listeners
@@ -365,9 +365,9 @@ class _WebkitRendererHelper(QObject):
 
 class CustomWebPage(QWebPage):
     def __init__(self, **kwargs):
-    	"""
-    	Class Initializer
-    	"""
+        """
+        Class Initializer
+        """
         super(CustomWebPage, self).__init__()
         self.logger = kwargs.get('logger', None)
         self.ignore_alert = kwargs.get('ignore_alert', True)
